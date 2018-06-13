@@ -6,7 +6,7 @@ long_description = open('README.md').read()
 
 
 setup(name='myouji_kenchi',
-      version='1.0.0',
+      version='1.0.1dev',
       author='Derick Anderson',
       author_email='anderson.derick.w@gmail.com',
       description='Determine if romanized Japanese names are family names',
