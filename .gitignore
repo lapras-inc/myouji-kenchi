@@ -1,0 +1,6 @@
+data/processed/
+data/raw/
+build/
+dist/
+__pycache__
+*.egg-info
