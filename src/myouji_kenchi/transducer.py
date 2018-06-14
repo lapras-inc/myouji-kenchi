@@ -29,7 +29,7 @@ class MyoujiBackTransliteration():
         """
         # It is convenient to match on COMBINING MACRON and COMBINING CIRCUMFLEX
         # separately from their vowels
-        normalized = unicodedata.normalize('NFKD', romaji).lower() + '$'
+        normalized = unicodedata.normalize('NFKD', romaji).lower()
         try:
             input_fst = _make_input_fst(normalized)
         except ValueError:
@@ -43,10 +43,8 @@ class MyoujiBackTransliteration():
 def _build_transliterator():
     td = fst.Fst()
     initial_state = td.add_state()
-    final = td.add_state()
     td.set_start(initial_state)
-    td.set_final(final)
-    _char_arc(td, initial_state, '$', EPSILON, final)
+    td.set_final(initial_state)
     long_vowel_possibilities = {'u': 'ウ',
                                 'i': 'イ',
                                 'e': 'エ',
