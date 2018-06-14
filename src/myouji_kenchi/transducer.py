@@ -162,7 +162,7 @@ def _build_n(td, start_state, end_states):
     _char_arc(td, n, 'a', 'ナ', end_states['a'])
     _char_arc(td, n, 'u', 'ヌ', end_states['e'])
 
-    _char_arc(td, n, 'y', 'n', end_states['y'])
+    _char_arc(td, n, 'y', 'ニ', end_states['y'])
 
 
 def _build_kg(td, start_state, end_states):
@@ -182,8 +182,8 @@ def _build_kg(td, start_state, end_states):
     _multi_char_arc(td, g_begin, 'ga', 'ガ', end_states['a'])
     _multi_char_arc(td, g_begin, 'gu', 'グ', end_states['u'])
 
-    _multi_char_arc(td, k_begin, 'ky', 'ky', end_states['y'])
-    _multi_char_arc(td, g_begin, 'gy', 'gy', end_states['y'])
+    _multi_char_arc(td, k_begin, 'ky', 'キ', end_states['y'])
+    _multi_char_arc(td, g_begin, 'gy', 'ギ', end_states['y'])
 
 
 def _build_r(td, start_state, end_states):
@@ -193,7 +193,7 @@ def _build_r(td, start_state, end_states):
     _multi_char_arc(td, start_state, 'ra', 'ラ', end_states['a'])
     _multi_char_arc(td, start_state, 'ru', 'ル', end_states['u'])
 
-    _multi_char_arc(td, start_state, 'ry', 'ry', end_states['y'])
+    _multi_char_arc(td, start_state, 'ry', 'リ', end_states['y'])
 
 
 def _build_m(td, start_state, end_states):
@@ -258,22 +258,26 @@ def _build_hpb(td, start_state, end_states):
 
 def _long_vowel_mark_state(td, end_state, vowels):
     result = td.add_state()
-    for vowel in vowels:
-        _many_to_one_arc(td,
-                         result,
-                         [unicodedata.lookup('COMBINING MACRON'),  # Hepburn
-                          unicodedata.lookup('COMBINING CIRCUMFLEX ACCENT'),  # Kunrei-shiki and Nihon-shiki
-                          'h',  # passport Hepburn
-                          EPSILON],  # commonly omitted
-                         vowel,
-                         end_state)
+    if isinstance(vowels, str):
+        vowels = [vowels]
+    _many_to_many_arc(td,
+                      result,
+                      [unicodedata.lookup('COMBINING MACRON'),  # Hepburn
+                       unicodedata.lookup('COMBINING CIRCUMFLEX ACCENT'),  # Kunrei-shiki and Nihon-shiki
+                       'h',  # passport Hepburn
+                       EPSILON],  # commonly omitted
+                      vowels,
+                      end_state)
     _eps_arc(td, result, end_state)
     return result
 
 
 def _double_consonant_state(td, start_state, consonants):
     state = td.add_state()
-    _many_to_one_arc(td, start_state, consonants, 'ッ', state)
+    if isinstance(consonants, str):
+        _multi_char_arc(td, start_state, consonants, 'ッ', state)
+    else:
+        _many_to_one_arc(td, start_state, consonants, 'ッ', state)
     _eps_arc(td, start_state, state)
     return state
 

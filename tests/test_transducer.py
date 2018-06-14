@@ -43,6 +43,8 @@ class TestTransducer():
         self.assert_transliteration('Becchaku', 'ベッチャク')
         self.assert_transliteration('Uwozaki', 'ウヲザキ')
         self.assert_transliteration('Uozaki', 'ウヲザキ', 'ウオザキ')
+        self.assert_transliteration('Nyoya', 'ニョウヤ')
+        self.assert_transliteration('Nitta', 'ニッタ')
 
     def test_oh(self):
         self.assert_transliteration('Ohnishi', 'オオニシ', 'オウニシ')
