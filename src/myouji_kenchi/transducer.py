@@ -298,24 +298,20 @@ def _one_to_many_arc(td, start_state, input_str, output_strs, end_state):
 
 
 def _multi_char_arc(td, start_state, input_str, output_str, end_state):
-    curr = start_state
+    if not (input_str or output_str):
+        raise ValueError('Must pass a non-empty string')
+    num_intermediary_states = max(len(input_str), len(output_str)) - 1
+    states = [start_state, *[td.add_state() for _ in range(num_intermediary_states)], end_state]
     i = 0
     while i < min(len(input_str), len(output_str)):
-        nxt = td.add_state()
-        _char_arc(td, curr, input_str[i], output_str[i], nxt)
-        curr = nxt
+        _char_arc(td, states[i], input_str[i], output_str[i], states[i + 1])
         i += 1
     while i < len(input_str):
-        nxt = td.add_state()
-        _char_arc(td, curr, input_str[i], EPSILON, nxt)
-        curr = nxt
+        _char_arc(td, states[i], input_str[i], EPSILON, states[i + 1])
         i += 1
     while i < len(output_str):
-        nxt = td.add_state()
-        _char_arc(td, curr, EPSILON, output_str[i], nxt)
-        curr = nxt
+        _char_arc(td, states[i], EPSILON, output_str[i], states[i + 1])
         i += 1
-    _char_arc(td, curr, EPSILON, EPSILON, end_state)
 
 
 def _char_arc(td, start_state, input_char, output_char, next_state):
